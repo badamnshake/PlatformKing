@@ -53,10 +53,10 @@ TagManager:
   - name: Walls
     uniqueID: 2940389013
     locked: 0
-  - name: New Layer
+  - name: Platforms
     uniqueID: 2966430015
     locked: 0
-  - name: New Layer
+  - name: Items
     uniqueID: 101724697
     locked: 0
   - name: New Layer
