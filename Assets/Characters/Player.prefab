@@ -81,10 +81,6 @@ MonoBehaviour:
   _groundMask:
     serializedVersion: 2
     m_Bits: 128
-  _jumpParticles: {fileID: 0}
-  _launchParticles: {fileID: 0}
-  _moveParticles: {fileID: 0}
-  _landParticles: {fileID: 0}
   _footsteps: []
   _maxTilt: 0.1
   _tiltSpeed: 1
@@ -236,9 +232,12 @@ MonoBehaviour:
   _groundLayer:
     serializedVersion: 2
     m_Bits: 128
+  _wallLayer:
+    serializedVersion: 2
+    m_Bits: 256
   _detectorCount: 3
   _detectionRayLength: 0.1
-  _rayBuffer: 0.1
+  _rayBuffer: 0.1586
   _acceleration: 90
   _moveClamp: 13
   _deAcceleration: 60
@@ -251,6 +250,7 @@ MonoBehaviour:
   _coyoteTimeThreshold: 0.1
   _jumpBuffer: 0.1
   _jumpEndEarlyGravityModifier: 3
+  _fromWallJumpHeight: 0
   _freeColliderIterations: 10
 --- !u!1 &8632897959094509699
 GameObject:

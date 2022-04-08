@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace TarodevController {
+namespace Player {
  
     public struct FrameInput {
         public float X,Y;
@@ -15,6 +15,7 @@ namespace TarodevController {
         public FrameInput Input { get; }
         public bool JumpingThisFrame { get; }
         public bool LandingThisFrame { get; }
+        public bool onWallThisFrame { get; }
         public Vector3 RawMovement { get; }
         public bool Grounded { get; }
     }
