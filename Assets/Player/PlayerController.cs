@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace Player
@@ -19,8 +17,9 @@ namespace Player
         public Vector3 Velocity { get; private set; }
         public FrameInput Input { get; private set; }
         public bool JumpingThisFrame { get; private set; }
+        public bool Falling { get; private set; }
         public bool LandingThisFrame { get; private set; }
-        public bool onWallThisFrame { get; private set; }
+        public bool OnWall { get; private set; }
         public Vector3 RawMovement { get; private set; }
         public bool Grounded => _colDown;
 
@@ -46,7 +45,7 @@ namespace Player
             CalculateJumpApex(); // Affects fall speed, so calculate before gravity
             CalculateGravity(); // Vertical movement
             CalculateJump(); // Possibly overrides vertical
-            CalculateWallStick();
+            CalculateWallStick(); // locks the controls when stuck on the wall
 
             MoveCharacter(); // Actually perform the axis movement
         }
@@ -54,14 +53,18 @@ namespace Player
 
         #region Gather Input
 
+        private bool _lockHorizontalMovement = false;
+
         private void GatherInput()
         {
-            Input = new FrameInput
+            var getInput = new FrameInput
             {
                 JumpDown = UnityEngine.Input.GetButtonDown("Jump"),
                 JumpUp = UnityEngine.Input.GetButtonUp("Jump"),
                 X = UnityEngine.Input.GetAxisRaw("Horizontal")
             };
+            if (_lockHorizontalMovement) getInput.X = 0;
+            Input = getInput;
             if (Input.JumpDown)
             {
                 _lastJumpPressed = Time.time;
@@ -309,10 +312,12 @@ namespace Player
                 _endedJumpEarly = true;
             }
 
-            if (_colUp)
+            if (_colUp && _currentVerticalSpeed > 0)
             {
-                if (_currentVerticalSpeed > 0) _currentVerticalSpeed = 0;
+                _currentVerticalSpeed = 0;
             }
+
+            Falling = _currentVerticalSpeed < 0;
         }
 
         #endregion
@@ -327,15 +332,17 @@ namespace Player
 
         private void CalculateWallStick()
         {
+            _lockHorizontalMovement = false;
             // check if player is on wall
             _isOnWall = false;
-            onWallThisFrame = false;
+            OnWall = false;
             _isTouchingWall = !_colDown && (_colWallRight || _colWallLeft);
 
             // if player has vertical speed player will not stick to the wall
             if (!(_currentVerticalSpeed <= 0) || !_isTouchingWall) return;
 
-            if (!onWallThisFrame) onWallThisFrame = true;
+            if (!OnWall) OnWall = true;
+            _lockHorizontalMovement = true;
 
             _isOnWall = true;
 

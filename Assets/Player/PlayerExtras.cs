@@ -14,8 +14,9 @@ namespace Player {
         public Vector3 Velocity { get; }
         public FrameInput Input { get; }
         public bool JumpingThisFrame { get; }
+        public bool Falling { get; }
         public bool LandingThisFrame { get; }
-        public bool onWallThisFrame { get; }
+        public bool OnWall { get; }
         public Vector3 RawMovement { get; }
         public bool Grounded { get; }
     }
