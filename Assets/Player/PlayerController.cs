@@ -99,6 +99,8 @@ namespace Player
             // Ground
             LandingThisFrame = false;
             var groundedCheck = RunDetection(_raysDown, _groundLayer);
+            var wallOnBottomCheck = RunDetection(_raysDown, _wallLayer);
+            
             if (_colDown && !groundedCheck) _timeLeftGrounded = Time.time; // Only trigger when first leaving
             else if (!_colDown && groundedCheck)
             {
@@ -106,21 +108,19 @@ namespace Player
                 LandingThisFrame = true;
             }
 
-            _colDown = groundedCheck;
+            _colDown = groundedCheck || wallOnBottomCheck;
 
             // The rest
-            _colUp = RunDetection(_raysUp, _groundLayer);
+            _colUp = RunDetection(_raysUp, _groundLayer) || RunDetection(_raysUp, _wallLayer);
 
             _colWallLeft = RunDetection(_raysLeft, _wallLayer);
             _colWallRight = RunDetection(_raysRight, _wallLayer);
 
             // consider wall as colliding with the ground 
             // if wall colliding it will not check next things
-            // _colLeft = _colWallLeft || RunDetection(_raysLeft, _groundLayer);
-            // _colRight = _colWallRight || RunDetection(_raysRight, _groundLayer);
 
-            _colLeft = RunDetection(_raysLeft, _groundLayer);
-            _colRight = RunDetection(_raysRight, _groundLayer);
+            _colLeft = _colWallLeft ||  RunDetection(_raysLeft, _groundLayer);
+            _colRight = _colWallRight || RunDetection(_raysRight, _groundLayer);
 
 
             bool RunDetection(RayRange range, LayerMask layerMask)
